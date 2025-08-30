@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoPPTGenerator</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AutoPPTGenerator</h1>
+    <form method="POST" enctype="multipart/form-data" id="pptForm" onsubmit="return validateForm()">
+      <label for="text">Paste your text or markdown:</label><br>
+      <textarea id="text" name="text" rows="10" cols="80" required></textarea><br><br>
+      <label for="guidance">Guidance (optional):</label><br>
+      <input type="text" id="guidance" name="guidance" placeholder="e.g. turn into an investor pitch deck"><br><br>
+      <label for="api_key">LLM API Key:</label><br>
+      <input type="password" id="api_key" name="api_key" required><br><br>
+      <label for="template">Upload PowerPoint template (.pptx/.potx):</label><br>
+      <input type="file" id="template" name="template" accept=".pptx,.potx" required><br><br>
+      <button type="submit">Generate Presentation</button>
+    </form>
+    <script>
+    function validateForm() {
+      const text = document.getElementById('text').value.trim();
+      const apiKey = document.getElementById('api_key').value.trim();
+      const fileInput = document.getElementById('template');
+      if (!text) {
+        alert('Text is required.');
+        return false;
+      }
+      if (!apiKey) {
+        alert('LLM API Key is required.');
+        return false;
+      }
+      if (!fileInput.files.length) {
+        alert('Please upload a PowerPoint template file.');
+        return false;
+      }
+      const file = fileInput.files[0];
+      const allowed = ['pptx', 'potx'];
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!allowed.includes(ext)) {
+        alert('Only .pptx or .potx files are allowed.');
+        return false;
+      }
+      return true;
+    }
+    </script>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
