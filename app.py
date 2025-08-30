@@ -10,7 +10,7 @@ GENERATED_FOLDER = 'generated'
 ALLOWED_EXTENSIONS = {'pptx', 'potx'}
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['GENERATED_FOLDER'] = GENERATED_FOLDER
 app.secret_key = 'your_secret_key'  # Replace with a secure key
@@ -29,12 +29,19 @@ def index():
             guidance = request.form.get('guidance')
             api_key = request.form.get('api_key')
             file = request.files.get('template')
-            if not text or not api_key or not file or not allowed_file(file.filename):
-                flash('Please provide all required fields and a valid template file.')
+            
+            if not text or not api_key:
+                flash('Please provide text and LLM API key.')
                 return redirect(request.url)
-            filename = secure_filename(file.filename)
-            template_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(template_path)
+                
+            # Template is now optional
+            template_path = None
+            filename = "basic_presentation.pptx"
+            
+            if file and file.filename and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                template_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(template_path)
             # Analyze and split text
             try:
                 slides_content = split_text_to_slides(text, guidance, api_key)
@@ -70,4 +77,4 @@ def internal_error(error):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=9999)

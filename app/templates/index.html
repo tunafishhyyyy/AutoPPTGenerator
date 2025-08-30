@@ -5,57 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoPPTGenerator</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>AutoPPTGenerator</h1>
-    <form method="POST" enctype="multipart/form-data" id="pptForm" onsubmit="return validateForm()">
-      <label for="text">Paste your text or markdown:</label><br>
-      <textarea id="text" name="text" rows="10" cols="80" required></textarea><br><br>
-      <label for="guidance">Guidance (optional):</label><br>
-      <input type="text" id="guidance" name="guidance" placeholder="e.g. turn into an investor pitch deck"><br><br>
-      <label for="api_key">LLM API Key:</label><br>
-      <input type="password" id="api_key" name="api_key" required><br><br>
-      <label for="template">Upload PowerPoint template (.pptx/.potx):</label><br>
-      <input type="file" id="template" name="template" accept=".pptx,.potx" required><br><br>
-      <button type="submit">Generate Presentation</button>
-    </form>
-    <script>
-    function validateForm() {
-      const text = document.getElementById('text').value.trim();
-      const apiKey = document.getElementById('api_key').value.trim();
-      const fileInput = document.getElementById('template');
-      if (!text) {
-        alert('Text is required.');
-        return false;
-      }
-      if (!apiKey) {
-        alert('LLM API Key is required.');
-        return false;
-      }
-      if (!fileInput.files.length) {
-        alert('Please upload a PowerPoint template file.');
-        return false;
-      }
-      const file = fileInput.files[0];
-      const allowed = ['pptx', 'potx'];
-      const ext = file.name.split('.').pop().toLowerCase();
-      if (!allowed.includes(ext)) {
-        alert('Only .pptx or .potx files are allowed.');
-        return false;
-      }
-      return true;
-    }
-    </script>
+        <header>
+            <h1>AutoPPTGenerator</h1>
+            <p>Transform your text into beautiful presentations with AI</p>
+        </header>
+        
+        <form method="POST" enctype="multipart/form-data" id="pptForm" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="text">Paste your text or markdown:</label>
+                <textarea id="text" name="text" rows="8" placeholder="Enter your content here... You can use markdown or plain text." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="guidance">Guidance (optional):</label>
+                <input type="text" id="guidance" name="guidance" placeholder="e.g., turn into an investor pitch deck">
+            </div>
+            
+            <div class="form-group">
+                <label for="api_key">LLM API Key:</label>
+                <input type="password" id="api_key" name="api_key" placeholder="Enter your OpenAI API key" required>
+                <small>Your API key is not stored and only used for this session.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="template">Upload PowerPoint template (optional):</label>
+                <input type="file" id="template" name="template" accept=".pptx,.potx">
+                <small>Upload a .pptx or .potx file to use as a template. If not provided, a basic template will be used.</small>
+            </div>
+            
+            <button type="submit" class="generate-btn">
+                <span>Generate Presentation</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m9 18 6-6-6-6"/>
+                </svg>
+            </button>
+        </form>
+        
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            <ul class="flashes">
+            <div class="flash-messages">
             {% for message in messages %}
-              <li>{{ message }}</li>
+              <div class="flash-message">{{ message }}</div>
             {% endfor %}
-            </ul>
+            </div>
           {% endif %}
         {% endwith %}
     </div>
+    
+    <script>
+        function validateForm() {
+            const text = document.getElementById('text').value.trim();
+            const apiKey = document.getElementById('api_key').value.trim();
+            const fileInput = document.getElementById('template');
+            
+            if (!text) {
+                alert('Text is required.');
+                return false;
+            }
+            if (!apiKey) {
+                alert('LLM API Key is required.');
+                return false;
+            }
+            
+            // File is now optional, but if provided, validate extension
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const allowed = ['pptx', 'potx'];
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!allowed.includes(ext)) {
+                    alert('Only .pptx or .potx files are allowed.');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+    </script>
 </body>
 </html>

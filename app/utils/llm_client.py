@@ -1,4 +1,5 @@
-import openai
+from openai import OpenAI
+import json
 
 def analyze_text_with_llm(text, guidance, api_key):
     """
@@ -7,21 +8,33 @@ def analyze_text_with_llm(text, guidance, api_key):
     """
     if not api_key:
         raise ValueError("API key required")
+    
+    client = OpenAI(api_key=api_key)
+    
     prompt = f"""
     Analyze the following text and break it down into sections suitable for PowerPoint slides. {guidance if guidance else ''}
-    Return a JSON list of slides, each with a title, bullet points, and optional speaker notes.
+    Return a JSON array of slides, each with the following structure:
+    {{"title": "Slide Title", "bullets": ["Point 1", "Point 2"], "notes": "Speaker notes"}}
+    
     Text:\n{text}
     """
-    openai.api_key = api_key
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    # Extract and parse response
-    import json
-    slides = []
+    
     try:
-        slides = json.loads(response['choices'][0]['message']['content'])
-    except Exception:
-        slides = []
-    return slides
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        
+        content = response.choices[0].message.content
+        slides = json.loads(content)
+        
+        # Ensure slides is a list
+        if not isinstance(slides, list):
+            slides = [slides]
+            
+        return slides
+    except json.JSONDecodeError:
+        # If JSON parsing fails, create a basic slide structure
+        return [{"title": "Generated Content", "bullets": [text[:200] + "..."], "notes": "Auto-generated from provided text"}]
+    except Exception as e:
+        raise ValueError(f"Failed to process with LLM: {str(e)}")
