@@ -30,12 +30,29 @@ pip install -r requirements.txt
 
 4. **Run the application:**
 
+**Using the start script (recommended):**
+```bash
+# Linux/Mac
+./start.sh start    # Start the application
+./start.sh status   # Check if running
+./start.sh logs     # View real-time logs
+./start.sh stop     # Stop the application
+./start.sh restart  # Restart the application
+
+# Windows
+start.bat start     # Start the application
+start.bat status    # Check if running
+start.bat stop      # Stop the application
+```
+
+**Manual methods:**
+
 **Development mode (foreground):**
 ```bash
 python app.py
 ```
 
-**Background mode (recommended for servers):**
+**Background mode:**
 ```bash
 # Using nohup (keeps running after terminal closes)
 nohup python app.py > app.log 2>&1 &
@@ -52,11 +69,31 @@ sudo systemctl enable autoppt
 ```
 
 5. **Access the application:**
-   - Open your browser and go to: `http://localhost:9999`
-   - Or replace `localhost` with your server's IP address
+   - **Local access:** `http://localhost:7777`
+   - **Remote access:** `http://84.247.184.189:7777`
+   - Replace with your server's IP address if different
+
+### Quick Start Commands
+```bash
+# Quick start (Linux/Mac)
+./start.sh start
+
+# Check status
+./start.sh status
+
+# View logs
+./start.sh logs
+
+# Stop application
+./start.sh stop
+```
 
 ### Stopping Background Process
 ```bash
+# Using start script (recommended)
+./start.sh stop
+
+# Manual methods
 # Find and kill the process
 ps aux | grep "python app.py"
 kill <process_id>
