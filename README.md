@@ -1,4 +1,163 @@
 # AutoPPTGenerator
+**Text, Your Style – Auto-Generate a Presentation**
+
+Create a publicly accessible web app that lets anyone turn bulk text, markdown, or prose into a fully formatted PowerPoint presentation that matches their chosen template's look and feel.
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8+
+- Virtual environment (recommended)
+
+### Installation & Setup
+
+1. **Clone the repository:**
+```bash
+git clone https://github.com/tunafishhyyyy/AutoPPTGenerator.git
+cd AutoPPTGenerator
+```
+
+2. **Set up virtual environment:**
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+3. **Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Run the application:**
+
+**Development mode (foreground):**
+```bash
+python app.py
+```
+
+**Background mode (recommended for servers):**
+```bash
+# Using nohup (keeps running after terminal closes)
+nohup python app.py > app.log 2>&1 &
+
+# Using screen (allows reconnecting to session)
+screen -S autoppt
+python app.py
+# Press Ctrl+A, then D to detach
+
+# Using systemd (for production servers)
+# Create service file: /etc/systemd/system/autoppt.service
+sudo systemctl start autoppt
+sudo systemctl enable autoppt
+```
+
+5. **Access the application:**
+   - Open your browser and go to: `http://localhost:9999`
+   - Or replace `localhost` with your server's IP address
+
+### Stopping Background Process
+```bash
+# Find and kill the process
+ps aux | grep "python app.py"
+kill <process_id>
+
+# Or use pkill
+pkill -f "python app.py"
+```
+
+## 📋 Features
+
+### Core Functionality
+- ✅ Paste large blocks of text or markdown
+- ✅ Optional guidance for presentation style
+- ✅ Support for OpenAI API (user-provided keys)
+- ✅ **Optional** PowerPoint template upload (.pptx/.potx)
+- ✅ Intelligent text-to-slides mapping
+- ✅ Style preservation from templates
+- ✅ Automatic slide generation with speaker notes
+
+### Enhanced Features
+- 🎨 Modern, responsive UI design
+- 🛡️ Comprehensive error handling
+- 🔒 Secure API key handling (not stored)
+- 📱 Mobile-friendly interface
+- ⚡ Fast processing with real-time feedback
+
+## 🔧 Technical Architecture
+
+### How It Works
+
+**Text Analysis & Slide Mapping:**
+The application uses advanced LLM processing to intelligently parse input text and map it to presentation slides. The system:
+- Analyzes text structure and content themes
+- Applies user guidance for tone and style
+- Automatically determines optimal slide count
+- Generates coherent slide titles and bullet points
+- Creates relevant speaker notes for each slide
+
+**Template Style Application:**
+When a PowerPoint template is provided, the app:
+- Preserves original slide layouts and designs
+- Maintains color schemes and font styles
+- Reuses existing images and visual elements
+- Applies consistent formatting across generated slides
+- Falls back to a clean, professional design when no template is provided
+
+## 📁 Project Structure
+```
+AutoPPTGenerator/
+├── app.py                 # Main Flask application
+├── requirements.txt       # Python dependencies
+├── app/
+│   ├── templates/
+│   │   └── index.html    # Main UI template
+│   ├── static/
+│   │   └── css/
+│   │       └── style.css # Modern UI styling
+│   └── utils/
+│       ├── llm_client.py    # OpenAI API integration
+│       ├── ppt_processor.py # PowerPoint generation
+│       └── text_analyzer.py # Text processing logic
+├── uploads/              # Temporary template storage
+└── generated/           # Output presentations
+```
+
+## 🔐 Security & Privacy
+- API keys are never stored or logged
+- Uploaded templates are temporarily stored and can be manually cleaned
+- Generated presentations are stored locally (consider cleanup policies)
+- No user data persistence
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+- **Port already in use**: The app tries port 9999. If busy, modify `port=9999` in `app.py`
+- **OpenAI API errors**: Ensure valid API key and sufficient credits
+- **Template upload issues**: Only .pptx and .potx files are supported
+- **Memory issues**: Large texts or complex templates may require more RAM
+
+### Logs
+When running in background mode, check logs:
+```bash
+tail -f app.log  # For nohup method
+screen -r autoppt  # For screen method
+```
+
+## 📄 License
+MIT License - see LICENSE file for details
+
+## 🤝 Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+---
+
+*Built with Flask, OpenAI API, and python-pptx*
+```
+
+## ObjectiveoPPTGenerator
 Text, Your Style – Auto-Generate a Presentation
 Create a publicly accessible web app that lets anyone turn bulk text, markdown, or prose into a fully formatted PowerPoint presentation that matches their chosen template’s look and feel.
 
